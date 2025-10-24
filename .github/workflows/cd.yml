@@ -26,6 +26,7 @@ jobs:
         with:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           project_id: notely-476113
+          export_default_credentials: true
 
       - name: Configure Docker to use gcloud as a credential helper
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
