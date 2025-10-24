@@ -32,9 +32,6 @@ jobs:
       - name: Configure Docker to use gcloud as a credential helper
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      - name: Enable Cloud Build API
-        run: gcloud services enable cloudbuild.googleapis.com
-
       - name: Create a custom staging bucket
         run: |
           gsutil mb gs://notely-476113-custom-cloudbuild || true
