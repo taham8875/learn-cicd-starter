@@ -32,9 +32,10 @@ jobs:
       - name: Configure Docker to use gcloud as a credential helper
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      - name: Create a custom staging bucket
+      - name: Build and push Docker image using Docker directly
         run: |
-          gsutil mb gs://notely-476113-custom-cloudbuild || true
+          # Build the Docker image locally
+          docker build -t us-central1-docker.pkg.dev/notely-476113/notely-ar-repo/notely:latest .
 
-      - name: Build and push Docker image
-        run: gcloud builds submit --gcs-source-staging-dir=gs://notely-476113-custom-cloudbuild/source --tag us-central1-docker.pkg.dev/notely-476113/notely-ar-repo/notely:latest .
+          # Push to Artifact Registry
+          docker push us-central1-docker.pkg.dev/notely-476113/notely-ar-repo/notely:latest
