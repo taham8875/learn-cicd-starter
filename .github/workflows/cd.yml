@@ -35,8 +35,17 @@ jobs:
       - name: Get gcloud project
         run: gcloud config get-value project
 
-      - name: Use gcloud CLI
-        run: gcloud info
+      - name: Use gcloud CLI (debug)
+        run: |
+          gcloud --version
+          echo "Active account:"
+          gcloud auth list --filter=status:ACTIVE
+          echo "Project:"
+          gcloud config get-value project
+          echo "Credential file path (not contents):"
+          echo "$GOOGLE_APPLICATION_CREDENTIALS"
+          echo "Service account email from creds (non-sensitive):"
+          (command -v jq >/dev/null && jq -r '.client_email // empty' "$GOOGLE_APPLICATION_CREDENTIALS") || true
 
       - name: Build and push Docker image
         # run: gcloud builds submit --tag REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG .
