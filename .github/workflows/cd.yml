@@ -32,6 +32,9 @@ jobs:
       - name: Configure Docker to use gcloud as a credential helper
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
+      - name: Authenticate Docker with Artifact Registry
+        run: gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin us-central1-docker.pkg.dev
+
       - name: Build and push Docker image using Docker directly
         run: |
           # Build the Docker image locally
