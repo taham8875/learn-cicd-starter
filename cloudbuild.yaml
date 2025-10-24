@@ -1,0 +1,23 @@
+steps:
+  # Build the Go application
+  - name: 'gcr.io/cloud-builders/go'
+    args: ['build', '-o', 'notely', '.']
+    env:
+      - 'CGO_ENABLED=0'
+      - 'GOOS=linux'
+      - 'GOARCH=amd64'
+
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'us-central1-docker.pkg.dev/notely-476113/notely-ar-repo/notely:latest',
+      '.'
+    ]
+
+  # Push the Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/notely-476113/notely-ar-repo/notely:latest']
+
+images:
+  - 'us-central1-docker.pkg.dev/notely-476113/notely-ar-repo/notely:latest'
