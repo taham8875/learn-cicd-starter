@@ -21,7 +21,7 @@ jobs:
       - name: Build application
         run: ./scripts/buildprod.sh
 
-      - name: Authenticate to Google Cloud
+      - id: auth
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
@@ -29,16 +29,8 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Configure Docker to use gcloud as a credential helper
-        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+      - name: Use gcloud CLI
+        run: gcloud info
 
-      - name: Authenticate Docker with Artifact Registry
-        run: gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin us-central1-docker.pkg.dev
-
-      - name: Build and push Docker image using Docker directly
-        run: |
-          # Build the Docker image locally
-          docker build -t us-central1-docker.pkg.dev/notely-476113/notely-ar-repo/notely:latest .
-
-          # Push to Artifact Registry
-          docker push us-central1-docker.pkg.dev/notely-476113/notely-ar-repo/notely:latest
+      - name: Build and push Docker image
+        run: gcloud builds submit --tag REGION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG .
